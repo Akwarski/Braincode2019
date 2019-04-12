@@ -12,6 +12,7 @@ def GPS_GET(request):
     respones_data = {}
     respones_data['dlugosc'] = dlugosc
     respones_data['szerokosc'] = szerokosc
+
     return HttpResponse(json.dumps(respones_data), content_type="application/json")
     #return HttpResponse("Your gps data is " + dlugosc + " " + szerokosc)
 
