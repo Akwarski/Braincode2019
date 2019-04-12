@@ -4,5 +4,7 @@ def home(request):
     return HttpResponse("Hello" + request)
 
 def GPS_GET(request):
-    return HttpResponse("You just got your gps data")
+    dlugosc = request.GET.get('dlugosc')
+    szerokosc = request.GET.get("szerokosc")
+    return HttpResponse("You just got your gps data " + dlugosc + " " + szerokosc)
 # Create your views here.
