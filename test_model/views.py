@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 import json
 from .get_points import get_points
+from .distance import find_closest
 
 def home(request):
     return HttpResponse("Hello" + request)
@@ -12,7 +13,13 @@ def GPS_GET(request):
     respones_data = {}
     respones_data['dlugosc'] = dlugosc
     respones_data['szerokosc'] = szerokosc
-    return HttpResponse(json.dumps(respones_data), content_type="application/json")
+
+    closest = find_closest((float)(dlugosc),(float)(szerokosc), 1)
+    points = []
+    for place in closest:
+        points.append(request.GET.get(place))
+
+    return HttpResponse(json.dumps(get_points(points)), content_type="application/json")
     #return HttpResponse("Your gps data is " + dlugosc + " " + szerokosc)
 
 def test_points(request):
