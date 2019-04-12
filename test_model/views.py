@@ -19,7 +19,7 @@ def test_points(request):
     points = []
     points.append(request.GET.get('1'))
     points.append(request.GET.get('2'))
-    return HttpResponse(get_points(points))
+    return HttpResponse(json.dumps(get_points(points)), content_type="application/json")
 
 
 # Create your views here.

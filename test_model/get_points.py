@@ -9,7 +9,6 @@ def get_points(punkty):
         obj = Paczkomat.objects.get(id= punkt)
         data.append(obj)
     for object in data:
-
         one_data['type'] = object.type
         one_data['name'] = object.name
         one_data['adress'] = object.adress
