@@ -1,8 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 import json
-from .get_points import get_points
-
 def home(request):
     return HttpResponse("Hello" + request)
 
@@ -14,12 +12,4 @@ def GPS_GET(request):
     respones_data['szerokosc'] = szerokosc
     return HttpResponse(json.dumps(respones_data), content_type="application/json")
     #return HttpResponse("Your gps data is " + dlugosc + " " + szerokosc)
-
-def test_points(request):
-    points = []
-    points.append(request.GET.get('1'))
-    points.append(request.GET.get('2'))
-    return HttpResponse(get_points(points))
-
-
 # Create your views here.
