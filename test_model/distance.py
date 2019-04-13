@@ -48,8 +48,10 @@ def find_closest(dlug, szer, current_day = "", time = "", distance = 3):
             data = data[1:-1].split('*')
 
             if len(data) > 1:
+                #print(data)
+                #print(calc_dist_to_km(dlug, szer, paczka.dlugosc, paczka.szerokosc))
                 if calc_dist_to_km(dlug, szer, paczka.dlugosc, paczka.szerokosc) <= distance:
-                    print(calc_dist_to_km(dlug, szer, paczka.dlugosc, paczka.szerokosc))
+
                     for day in data:
                         tempDay = day
                         day = day.replace('""', '"')
