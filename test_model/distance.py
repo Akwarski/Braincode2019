@@ -44,7 +44,7 @@ def check_open(data, current_day, time):
     return False
 
 
-def find_closest(dlug, szer, current_day = "", time = "", distance = 3):
+def find_closest(dlug, szer, current_day = "", time = "", distance = 20):
     indexes = []
     paczki = Paczkomat.objects.all()
 
