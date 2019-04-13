@@ -9,8 +9,8 @@ public class JsonData {
     private String adress;
     private String post_code;
     private String city;
-    private String dlugosc;
-    private String szerokosc;
+    private double dlugosc;
+    private double szerokosc;
     //private String dates;
 
     public String getType() {
@@ -33,11 +33,11 @@ public class JsonData {
         return city;
     }
 
-    public String getDlugosc() {
+    public double getDlugosc() {
         return dlugosc;
     }
 
-    public String getSzerokosc() {
+    public double getSzerokosc() {
         return szerokosc;
     }
 
