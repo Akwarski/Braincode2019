@@ -4,6 +4,7 @@ import json
 from .get_points import get_points
 from .distance import find_closest
 
+
 def home(request):
     return HttpResponse("Hello" + request)
 
@@ -17,7 +18,6 @@ def GPS_GET(request):
     else:
         closest = find_closest((float)(dlugosc), (float)(szerokosc))
 
-
     return HttpResponse(json.dumps(get_points(closest)), content_type="application/json")
 
 def test_points(request):
@@ -26,5 +26,11 @@ def test_points(request):
     points.append(request.GET.get('2'))
     return HttpResponse(json.dumps(get_points(points)), content_type="application/json")
 
+def map(request):
+    dlugosc = request.GET.get('dlugosc')
+    szerokosc = request.GET.get('szerokosc')
+    context = {'dlugosc': dlugosc,
+               'szerokosc': szerokosc}
+    return render(request, 'index.html', context=context)
 
 # Create your views here.
