@@ -20,5 +20,6 @@ def get_points(punkty):
         #one_data['dates'] = object.dates
         data_json.append(one_data)
 
+
     return data_json
 

@@ -17,7 +17,7 @@ def GPS_GET(request):
         closest = find_closest((float)(dlugosc),(float)(szerokosc), (int)(odlegosc))
     else:
         closest = find_closest((float)(dlugosc), (float)(szerokosc))
-
+        print(dlugosc, szerokosc, closest)
     return HttpResponse(json.dumps(get_points(closest)), content_type="application/json")
 
 def test_points(request):
@@ -27,10 +27,20 @@ def test_points(request):
     return HttpResponse(json.dumps(get_points(points)), content_type="application/json")
 
 def map(request):
-    dlugosc = request.GET.get('dlugosc')
-    szerokosc = request.GET.get('szerokosc')
+    dlugosc = request.GET.get('szerokosc')
+    szerokosc = request.GET.get('dlugosc') #dont mind me
+    odlegosc = request.GET.get('odleglosc')
+
+    if type(odlegosc) is str:
+        closest = find_closest((float)(dlugosc),(float)(szerokosc), (int)(odlegosc))
+    else:
+        closest = find_closest((float)(dlugosc), (float)(szerokosc))
+        print(closest)
+    points = get_points(closest)
+
     context = {'dlugosc': dlugosc,
-               'szerokosc': szerokosc}
+               'szerokosc': szerokosc,
+               'points': points}
     return render(request, 'index.html', context=context)
 
 
