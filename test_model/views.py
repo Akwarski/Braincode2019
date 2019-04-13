@@ -16,10 +16,17 @@ def GPS_GET(request):
     dzien = request.GET.get("dzien")
     godzina = request.GET.get('godzina')
 
+
     if type(odlegosc) is str:
-        closest = find_closest((float)(dlugosc),(float)(szerokosc), dzien, godzina, (int)(odlegosc))
+        if type(dzien) is str:
+            closest = find_closest((float)(dlugosc),(float)(szerokosc), dzien, godzina, (int)(odlegosc))
+        else:
+            closest = find_closest((float)(dlugosc), (float)(szerokosc), (int)(odlegosc))
     else:
-        closest = find_closest((float)(dlugosc), (float)(szerokosc), dzien, godzina)
+        if type(dzien) is str:
+            closest = find_closest((float)(dlugosc), (float)(szerokosc), dzien, godzina)
+        else:
+            closest = find_closest((float)(dlugosc), (float)(szerokosc))
 
 
 
