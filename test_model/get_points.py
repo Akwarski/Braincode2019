@@ -5,21 +5,21 @@ def get_points(punkty):
     data = []
     data_json = []
     for punkt in punkty:
-        obj = Paczkomat.objects.get(id= punkt)
+        obj = Paczkomat.objects.get(id=punkt)
+        print(obj)
         data.append(obj)
-
-    for object in data:
+    for data_point in data:
         one_data = {}
-        one_data['type'] = object.type
-        one_data['name'] = object.name
-        one_data['adress'] = object.adress
-        one_data['post_code'] = object.post_code
-        one_data['city'] = object.city
-        one_data['dlugosc'] = object.dlugosc
-        one_data['szerokosc'] = object.szerokosc
+        one_data['type'] = data_point.type
+        one_data['name'] = data_point.name
+        one_data['adress'] = data_point.adress
+        one_data['post_code'] = data_point.post_code
+        one_data['city'] = data_point.city
+        one_data['dlugosc'] = data_point.dlugosc
+        one_data['szerokosc'] = data_point.szerokosc
         #one_data['dates'] = object.dates
+        print(one_data)
         data_json.append(one_data)
-
 
     return data_json
 

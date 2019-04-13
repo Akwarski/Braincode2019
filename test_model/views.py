@@ -17,7 +17,7 @@ def GPS_GET(request):
         closest = find_closest((float)(dlugosc),(float)(szerokosc), (int)(odlegosc))
     else:
         closest = find_closest((float)(dlugosc), (float)(szerokosc))
-        print(dlugosc, szerokosc, closest)
+
     return HttpResponse(json.dumps(get_points(closest)), content_type="application/json")
 
 def test_points(request):
