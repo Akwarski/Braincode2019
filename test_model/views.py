@@ -11,16 +11,13 @@ def GPS_GET(request):
     dlugosc = request.GET.get('dlugosc')
     szerokosc = request.GET.get("szerokosc")
     respones_data = {}
+
     respones_data['dlugosc'] = dlugosc
     respones_data['szerokosc'] = szerokosc
 
-    closest = find_closest((float)(dlugosc),(float)(szerokosc), 1)
-    points = []
-    for place in closest:
-        points.append(request.GET.get(place))
+    closest = find_closest((float)(dlugosc),(float)(szerokosc), 10)
 
-    return HttpResponse(json.dumps(get_points(points)), content_type="application/json")
-    #return HttpResponse("Your gps data is " + dlugosc + " " + szerokosc)
+    return HttpResponse(json.dumps(get_points(closest)), content_type="application/json")
 
 def test_points(request):
     points = []

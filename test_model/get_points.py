@@ -16,7 +16,7 @@ def get_points(punkty):
         one_data['city'] = object.city
         one_data['dlugosc'] = object.dlugosc
         one_data['szerokosc'] = object.szerokosc
-        one_data['dates'] = object.dates
+        #one_data['dates'] = object.dates
         data_json[str(iterator)] = one_data
         iterator= iterator + 1
     return data_json
