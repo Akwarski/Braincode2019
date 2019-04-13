@@ -44,18 +44,18 @@ def check_open(data, current_day, time):
     return False
 
 
-def find_closest(dlug, szer, current_day = "", time = "", distance = 3):
+def find_closest(dlug, szer, current_day = "", time = "", distance = 20):
     indexes = []
     paczki = Paczkomat.objects.all()
 
     if current_day == "":
         for paczka in paczki:
-            if calc_dist_to_km(dlug, szer, paczka.dlugosc, paczka.szerokosc) <= distance:
+            #if calc_dist_to_km(dlug, szer, paczka.dlugosc, paczka.szerokosc) <= distance:
+            if haversine(dlug, szer, paczka.dlugosc, paczka.szerokosc) <= distance:
                 indexes.append((paczka.id, True))
         return indexes
     else:
         for paczka in paczki:
-
             data = paczka.dates
             data = data.replace('},{', '}*{')
             data = data[1:-1].split('*')
