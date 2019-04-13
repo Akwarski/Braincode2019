@@ -4,6 +4,7 @@ import json
 from .get_points import get_points
 from .distance import find_closest
 
+
 def home(request):
     return HttpResponse("Hello" + request)
 
@@ -26,5 +27,8 @@ def test_points(request):
     points.append(request.GET.get('2'))
     return HttpResponse(json.dumps(get_points(points)), content_type="application/json")
 
+
+
+# Create your views here.
 
 # Create your views here.
