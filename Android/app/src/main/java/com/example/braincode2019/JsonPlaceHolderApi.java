@@ -12,6 +12,12 @@ public interface JsonPlaceHolderApi {
     Call<List<JsonData>> getPost(@Query("dlugosc") double dlugosc,
                                  @Query("szerokosc") double szerokosc);
 
+    @GET("GPS_GET")
+    Call<List<JsonData>> getPostNext(@Query("dlugosc") double dlugosc,
+                                 @Query("szerokosc") double szerokosc,
+                                 @Query("dzien") String dayS,
+                                 @Query("godzina") String timeS);
+
     //http://localhost:8000/GPS_GET?dlugosc=100&szerokosc=200
     //http://192.168.43.28:8000/test?1=3&2=5
     @GET("test")

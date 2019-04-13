@@ -77,8 +77,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private Marker marker;
     ImageView imageView;
-    String dayS;
-    int hourS, minuteS;
+    String dayS, timeS;
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -92,48 +91,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar cal = Calendar.getInstance();
-                int hour = cal.get(Calendar.HOUR);
-                int minut = cal.get(Calendar.MINUTE);
-                int day = cal.get(Calendar.DAY_OF_WEEK);
-
-                DatePickerDialog dialog = new DatePickerDialog(
-                        MainActivity.this,
-                        android.R.style.Theme_Holo_Light_Dialog_MinWidth, dataPickerDialog, day,hour,minut);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.show();
+                Intent intent = new Intent(MainActivity.this,PopUpDataPicker.class);
+                startActivityForResult(intent,1);
             }
         });
-        dataPickerDialog = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int day, int hour, int minut) {
-                switch(day){
-                    case 1:
-                        dayS = "SUNDAY";
-                        break;
-                    case 2:
-                        dayS = "MONDAY";
-                        break;
-                    case 3:
-                        dayS = "TUESDAY";
-                        break;
-                    case 4:
-                        dayS = "WEDNESDAY";
-                        break;
-                    case 5:
-                        dayS = "THURSDAY";
-                        break;
-                    case 6:
-                        dayS = "FRIDAY";
-                        break;
-                    case 7:
-                        dayS = "SATURDAY";
-                        break;
-                }
-                hourS = hour;
-                minuteS = minut;
-            }
-        };
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
@@ -161,6 +122,33 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void getData(){
         Call<List<JsonData>> call = jsonPlaceHolderApi.getPost(szerokosc, dlugosc);
+
+        call.enqueue(new Callback<List<JsonData>>() {
+            @Override
+            public void onResponse(Call<List<JsonData>> call, Response<List<JsonData>> response) {
+                if (!response.isSuccessful()) {
+                    return;
+                }
+
+                items = response.body();
+
+                //set points on map
+                for (JsonData item : items) {
+                    marker = mMap.addMarker(new MarkerOptions().position(new LatLng(item.getSzerokosc(), item.getDlugosc())).title(item.getName()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.baseline_place_black_18dp)));
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<JsonData>> call, Throwable t) {
+                //tv2.setText(t.getMessage());
+            }
+        });
+    }
+
+    public void getDataNext(){
+        mMap.clear();
+        Call<List<JsonData>> call = jsonPlaceHolderApi.getPostNext(szerokosc, dlugosc, dayS, timeS);
 
         call.enqueue(new Callback<List<JsonData>>() {
             @Override
@@ -313,5 +301,20 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         //intent.putStringArrayListExtra("JsonData", items)
         //intent.putExtra("JsonData", items);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                dayS = data.getStringExtra("day");
+                timeS = data.getStringExtra("time");
+
+                getDataNext();
+
+            }else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(getApplicationContext(), "I'm back!", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
