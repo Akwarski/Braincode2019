@@ -1,9 +1,14 @@
 package com.example.braincode2019;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -17,8 +22,11 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +50,7 @@ import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -54,9 +63,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener,
-        GoogleMap.OnMarkerClickListener {
+        LocationListener, GoogleMap.OnInfoWindowClickListener {
 
+    private DatePickerDialog.OnDateSetListener dataPickerDialog;
     private FusedLocationProviderClient fusedLocationProviderClient;
     JsonPlaceHolderApi jsonPlaceHolderApi;
     double dlugosc, szerokosc;
@@ -67,6 +76,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     LocationRequest mLocationRequest;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private Marker marker;
+    ImageView imageView;
+    String dayS;
+    int hourS, minuteS;
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -75,10 +87,53 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        /*tv1 = findViewById(R.id.myLocation);
-        tv2 = findViewById(R.id.deliveryLocation);
-        button1 = findViewById(R.id.button1);
-        button2 = findViewById(R.id.button2);*/
+        //dataPicker
+        imageView = findViewById(R.id.iv);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar cal = Calendar.getInstance();
+                int hour = cal.get(Calendar.HOUR);
+                int minut = cal.get(Calendar.MINUTE);
+                int day = cal.get(Calendar.DAY_OF_WEEK);
+
+                DatePickerDialog dialog = new DatePickerDialog(
+                        MainActivity.this,
+                        android.R.style.Theme_Holo_Light_Dialog_MinWidth, dataPickerDialog, day,hour,minut);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+            }
+        });
+        dataPickerDialog = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int day, int hour, int minut) {
+                switch(day){
+                    case 1:
+                        dayS = "SUNDAY";
+                        break;
+                    case 2:
+                        dayS = "MONDAY";
+                        break;
+                    case 3:
+                        dayS = "TUESDAY";
+                        break;
+                    case 4:
+                        dayS = "WEDNESDAY";
+                        break;
+                    case 5:
+                        dayS = "THURSDAY";
+                        break;
+                    case 6:
+                        dayS = "FRIDAY";
+                        break;
+                    case 7:
+                        dayS = "SATURDAY";
+                        break;
+                }
+                hourS = hour;
+                minuteS = minut;
+            }
+        };
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
@@ -87,18 +142,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         //Location
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         getLocation();
-        /*button1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getLocation();
-            }
-        });*/
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-
 
 
         //http://localhost:8000/GPS_GET?dlugosc=100&szerokosc=200
@@ -110,20 +157,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         //JsonData
         jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
-
-        //przejscie do pop up
-        /*button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,Pop.class);
-                //intent.putStringArrayListExtra("JsonData", items)
-                //intent.putExtra("JsonData", items);
-                startActivity(intent);
-            }
-        });*/
     }
 
-    String TEMP = ":";
     public void getData(){
         Call<List<JsonData>> call = jsonPlaceHolderApi.getPost(szerokosc, dlugosc);
 
@@ -141,7 +176,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                     marker = mMap.addMarker(new MarkerOptions().position(new LatLng(item.getSzerokosc(), item.getDlugosc())).title(item.getName()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.baseline_place_black_18dp)));
                 }
 
-                //mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
             }
 
             @Override
@@ -221,6 +255,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.getUiSettings().setZoomGesturesEnabled(true);
         mMap.getUiSettings().setCompassEnabled(true);
 
+        mMap.setOnInfoWindowClickListener(this);
+
         //Initialize Google Play Services
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this,
@@ -267,72 +303,15 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
-    public boolean onMarkerClick(final Marker mark) {
-        Toast.makeText(getApplicationContext(), "YOLO", Toast.LENGTH_LONG).show();
-
-        if (mark.equals(marker))
-        {
-            Toast.makeText(getApplicationContext(), "hasgdhas", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(MainActivity.this,Pop.class);
-            //intent.putStringArrayListExtra("JsonData", items)
-            //intent.putExtra("JsonData", items);
-            startActivity(intent);
-        }
-        return true;
+    public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
 
     @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-        Toast.makeText(getApplicationContext(), "YOLO", Toast.LENGTH_LONG).show();
-
+    public void onInfoWindowClick(Marker marker) {
+        Intent intent = new Intent(MainActivity.this,Pop.class);
+        //intent.putStringArrayListExtra("JsonData", items)
+        //intent.putExtra("JsonData", items);
+        startActivity(intent);
     }
 }
-
-
-
-/*mLastLocation = location;
-        if (mCurrLocationMarker != null) {
-            mCurrLocationMarker.remove();
-        }
-        //Delivery Post
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latLng);
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        String provider = locationManager.getBestProvider(new Criteria(), true);
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        Location locations = locationManager.getLastKnownLocation(provider);
-        List<String> providerList = locationManager.getAllProviders();
-        if (null != locations && null != providerList && providerList.size() > 0) {
-            double longitude = locations.getLongitude();
-            double latitude = locations.getLatitude();
-            Geocoder geocoder = new Geocoder(getApplicationContext(),
-                    Locale.getDefault());
-            try {
-                List<Address> listAddresses = geocoder.getFromLocation(latitude,
-                        longitude, 1);
-                if (null != listAddresses && listAddresses.size() > 0) {
-                    String state = listAddresses.get(0).getAdminArea();
-                    String country = listAddresses.get(0).getCountryName();
-                    String subLocality = listAddresses.get(0).getSubLocality();
-                    markerOptions.title("" + latLng + "," + subLocality + "," + state
-                            + "," + country);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-        mCurrLocationMarker = mMap.addMarker(markerOptions);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
-        if (mGoogleApiClient != null) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient,
-                    this);
-        }*/

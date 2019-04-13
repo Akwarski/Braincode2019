@@ -52,7 +52,7 @@ def find_closest(dlug, szer, current_day = "", time = "", distance = 20):
         for paczka in paczki:
             #if calc_dist_to_km(dlug, szer, paczka.dlugosc, paczka.szerokosc) <= distance:
             if haversine(dlug, szer, paczka.dlugosc, paczka.szerokosc) <= distance:
-                indexes.append((paczka.id, True))
+                indexes.append((paczka.id, False))
         return indexes
     else:
         for paczka in paczki:
