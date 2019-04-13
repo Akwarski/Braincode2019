@@ -11,7 +11,7 @@ def calc_dist(x1,y1,x2,y2):
 def calc_dist_to_km(x1,y1,x2,y2):
     return np.sqrt(np.power(((111.320 * np.cos(y2))*x2-(111.320 * np.cos(y1))*x1), 2) + np.power(((110.574)*y2-(110.574)*y1), 2))
 
-def find_closest(dlug, szer, distance):
+def find_closest(dlug, szer, distance = 3):
     indexes = []
     paczki = Paczkomat.objects.all()
     for paczka in paczki:
