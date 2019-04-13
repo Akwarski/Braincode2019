@@ -58,8 +58,8 @@ def map(request):
     points = get_points(closest)
     print(points)
 
-    context = {'dlugosc': szerokosc,
-               'szerokosc': dlugosc,
+    context = {'dlugosc': dlugosc,
+               'szerokosc': szerokosc,
                'odleglosc': odlegosc,
                'points': points}
     return render(request, 'index.html', context=context)

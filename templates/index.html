@@ -14,13 +14,13 @@
 <script>
 function myMap() {
 var mapProp= {
-  center:new google.maps.LatLng({{ dlugosc }},{{ szerokosc}}),
+  center:new google.maps.LatLng({{ szerokosc }},{{ dlugosc}}),
   zoom:10,
 };
 var contentString = "WITAM";
 var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
 
-var marker = new google.maps.Marker({position: new google.maps.LatLng({{ dlugosc}},{{ szerokosc}}), map: map, label: {
+var marker = new google.maps.Marker({position: new google.maps.LatLng({{ szerokosc}},{{ dlugosc}}), map: map, label: {
     color: 'gray',
     fontWeight: 'bold',
     text: 'Tu jesteś!',
@@ -33,7 +33,7 @@ var cityCircle = new google.maps.Circle({
             fillColor: '#FF0000',
             fillOpacity: 0.35,
             map: map,
-            center: {lat: {{ dlugosc }}, lng: {{ szerokosc }} },
+            center: {lat: {{ szerokosc }}, lng: {{ dlugosc}} },
             radius: {{ odleglosc }} * 1000,
           },);
 infoArray = [];
@@ -43,16 +43,30 @@ markerArray = [];
           content: "{{ point.name }}"
         });
     infoArray.push(infowindow);
-
     {% endfor %}
 
     {% for point in points %}
 
     var name = "{{ point.name }}";
+    var otwarte = "{{ point.otwarte }}";
+
+    if( otwarte.localeCompare("True") ){
 
     markerArray.push(marker= new google.maps.Marker({position: new google.maps.LatLng( {{ point.szerokosc }}, {{ point.dlugosc }}), map: map,
-    title: name
+    title: name,
+        icon: {
+      url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
+    }
     }));
+    }else {
+
+        markerArray.push(marker= new google.maps.Marker({position: new google.maps.LatLng( {{ point.szerokosc }}, {{ point.dlugosc }}), map: map,
+    title: name,
+            icon: {
+      url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+    }
+    }));
+    }
 
         {% comment %}
     marker.addListener('click', function() {
@@ -67,6 +81,7 @@ markerArray = [];
             infoWindow.open(map, markerArray[number])
 
 
+
         });
     }
 
@@ -75,6 +90,33 @@ markerArray = [];
 </script>
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCFmXZUBd7-Ty65hc5z9H7vLYMjkAOI8VE&callback=myMap"></script>
+Time: <input id="time_input" type="text" name="lname", value="12:00"><br>
+Odległość: <input id="odleglosc_input" type="text" name="lname", value="100"><br>
+Day: <select id="list_box" name="Day">
+  <option value="volvo">MONDAY</option>
+    <option value="volvo">TUESDAY</option>
+    <option value="volvo">WEDNESDAY</option>
+    <option value="volvo">THURSDAY</option>
+    <option value="volvo">FRIDAY</option>
+    <option value="volvo">SATURDAY</option>
+    <option value="volvo">SUNDAY</option>
+</select><br>
+<button onclick="check()"> Sprwadź które punkty są otwarte</button>
+<script>
+function check() {
+    lat = {{ dlugosc }};
+    len = {{ szerokosc }};
+    e = document.getElementById("list_box");
+    day = e.options[e.selectedIndex].text;
+    console.log(day);
+    e = document.getElementById("time_input");
+    time = e.value;
+    e = document.getElementById("odleglosc_input");
+    odleglosc = e.value;
+    console.log(time);
 
+  window.open("map?dlugosc="+ lat + "&szerokosc=" + len +"&dzien=" + day + "&godzina=" + time + "&odleglosc=" + odleglosc, "_top")
+}
+</script>
 </body>
 </html>
