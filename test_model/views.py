@@ -33,9 +33,20 @@ def test_points(request):
 
 def map(request):
     dlugosc = request.GET.get('dlugosc')
-    szerokosc = request.GET.get('szerokosc')
+    szerokosc = request.GET.get('szerokosc') #dont mind me
+    odlegosc = request.GET.get('odleglosc')
+    dzien = request.GET.get("dzien")
+    godzina = request.GET.get('godzina')
+
+    if type(odlegosc) is str:
+        closest = find_closest((float)(dlugosc), (float)(szerokosc), dzien, godzina, (int)(odlegosc))
+    else:
+        closest = find_closest((float)(dlugosc), (float)(szerokosc), dzien, godzina)
+    points = get_points(closest)
+
     context = {'dlugosc': dlugosc,
-               'szerokosc': szerokosc}
+               'szerokosc': szerokosc,
+               'points': points}
     return render(request, 'index.html', context=context)
 
 
