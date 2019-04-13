@@ -10,14 +10,13 @@ def home(request):
 def GPS_GET(request):
     dlugosc = request.GET.get('dlugosc')
     szerokosc = request.GET.get("szerokosc")
-    
+    odlegosc = request.GET.get('odleglosc')
 
-    respones_data = {}
+    if type(odlegosc) is str:
+        closest = find_closest((float)(dlugosc),(float)(szerokosc), (int)(odlegosc))
+    else:
+        closest = find_closest((float)(dlugosc), (float)(szerokosc))
 
-    respones_data['dlugosc'] = dlugosc
-    respones_data['szerokosc'] = szerokosc
-
-    closest = find_closest((float)(dlugosc),(float)(szerokosc), 100)
 
     return HttpResponse(json.dumps(get_points(closest)), content_type="application/json")
 
