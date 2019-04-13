@@ -3,7 +3,7 @@ from test_model.models import Paczkomat
 def get_points(punkty):
     iterator = 1
     data = []
-    data_json = {}
+    data_json = []
     one_data = {}
     for punkt in punkty:
         obj = Paczkomat.objects.get(id= punkt)
@@ -17,7 +17,8 @@ def get_points(punkty):
         one_data['dlugosc'] = object.dlugosc
         one_data['szerokosc'] = object.szerokosc
         #one_data['dates'] = object.dates
-        data_json[str(iterator)] = one_data
+        data_json.append(one_data)
+        #data_json[str(iterator)] = one_data
         iterator= iterator + 1
     return data_json
 
