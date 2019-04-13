@@ -1,9 +1,6 @@
 package com.example.braincode2019;
 
 public class JsonData {
-    //private int myLocation;
-    //private int deliverLocation;
-
     private String type;
     private String name;
     private String adress;
@@ -11,7 +8,7 @@ public class JsonData {
     private String city;
     private double dlugosc;
     private double szerokosc;
-    //private String dates;
+
 
     public String getType() {
         return type;
@@ -40,16 +37,4 @@ public class JsonData {
     public double getSzerokosc() {
         return szerokosc;
     }
-
-    /*public String getDates() {
-        return dates;
-    }*/
-
-    /*public int getMyLocation() {
-        return myLocation;
-    }*/
-
-    /*public int getDeliverLocation() {
-        return deliverLocation;
-    }*/
 }
