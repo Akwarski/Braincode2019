@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,6 +69,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     LocationRequest mLocationRequest;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private Marker marker;
+    ImageView imageView;
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -80,6 +82,13 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         tv2 = findViewById(R.id.deliveryLocation);
         button1 = findViewById(R.id.button1);
         button2 = findViewById(R.id.button2);*/
+        imageView = findViewById(R.id.iv);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "YOLO", Toast.LENGTH_LONG).show();
+            }
+        });
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
@@ -88,18 +97,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         //Location
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         getLocation();
-        /*button1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getLocation();
-            }
-        });*/
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-
 
 
         //http://localhost:8000/GPS_GET?dlugosc=100&szerokosc=200
@@ -111,20 +112,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         //JsonData
         jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
-
-        //przejscie do pop up
-        /*button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,Pop.class);
-                //intent.putStringArrayListExtra("JsonData", items)
-                //intent.putExtra("JsonData", items);
-                startActivity(intent);
-            }
-        });*/
     }
 
-    String TEMP = ":";
     public void getData(){
         Call<List<JsonData>> call = jsonPlaceHolderApi.getPost(szerokosc, dlugosc);
 
@@ -268,23 +257,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    /*@Override
-    public boolean onMarkerClick(final Marker mark) {
-        *//*Toast.makeText(getApplicationContext(), "YOLO", Toast.LENGTH_LONG).show();
-
-        if (mark.equals(marker))
-        {
-            Toast.makeText(getApplicationContext(), "hasgdhas", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(MainActivity.this,Pop.class);
-            //intent.putStringArrayListExtra("JsonData", items)
-            //intent.putExtra("JsonData", items);
-            startActivity(intent);
-        }
-        return true;*//*
-        return false;
-
-    }*/
-
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
 
@@ -296,7 +268,5 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         //intent.putStringArrayListExtra("JsonData", items)
         //intent.putExtra("JsonData", items);
         startActivity(intent);
-
-
     }
 }
