@@ -1,7 +1,9 @@
 package com.example.braincode2019;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -54,8 +56,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener,
-        GoogleMap.OnMarkerClickListener {
+        LocationListener, GoogleMap.OnInfoWindowClickListener {
 
     private FusedLocationProviderClient fusedLocationProviderClient;
     JsonPlaceHolderApi jsonPlaceHolderApi;
@@ -141,7 +142,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                     marker = mMap.addMarker(new MarkerOptions().position(new LatLng(item.getSzerokosc(), item.getDlugosc())).title(item.getName()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.baseline_place_black_18dp)));
                 }
 
-                //mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
             }
 
             @Override
@@ -221,6 +221,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.getUiSettings().setZoomGesturesEnabled(true);
         mMap.getUiSettings().setCompassEnabled(true);
 
+        mMap.setOnInfoWindowClickListener(this);
+
         //Initialize Google Play Services
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this,
@@ -266,9 +268,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    @Override
+    /*@Override
     public boolean onMarkerClick(final Marker mark) {
-        Toast.makeText(getApplicationContext(), "YOLO", Toast.LENGTH_LONG).show();
+        *//*Toast.makeText(getApplicationContext(), "YOLO", Toast.LENGTH_LONG).show();
 
         if (mark.equals(marker))
         {
@@ -278,61 +280,23 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             //intent.putExtra("JsonData", items);
             startActivity(intent);
         }
-        return true;
+        return true;*//*
+        return false;
+
+    }*/
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
 
     @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-        Toast.makeText(getApplicationContext(), "YOLO", Toast.LENGTH_LONG).show();
+    public void onInfoWindowClick(Marker marker) {
+        Intent intent = new Intent(MainActivity.this,Pop.class);
+        //intent.putStringArrayListExtra("JsonData", items)
+        //intent.putExtra("JsonData", items);
+        startActivity(intent);
+
 
     }
 }
-
-
-
-/*mLastLocation = location;
-        if (mCurrLocationMarker != null) {
-            mCurrLocationMarker.remove();
-        }
-        //Delivery Post
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latLng);
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        String provider = locationManager.getBestProvider(new Criteria(), true);
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        Location locations = locationManager.getLastKnownLocation(provider);
-        List<String> providerList = locationManager.getAllProviders();
-        if (null != locations && null != providerList && providerList.size() > 0) {
-            double longitude = locations.getLongitude();
-            double latitude = locations.getLatitude();
-            Geocoder geocoder = new Geocoder(getApplicationContext(),
-                    Locale.getDefault());
-            try {
-                List<Address> listAddresses = geocoder.getFromLocation(latitude,
-                        longitude, 1);
-                if (null != listAddresses && listAddresses.size() > 0) {
-                    String state = listAddresses.get(0).getAdminArea();
-                    String country = listAddresses.get(0).getCountryName();
-                    String subLocality = listAddresses.get(0).getSubLocality();
-                    markerOptions.title("" + latLng + "," + subLocality + "," + state
-                            + "," + country);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-        mCurrLocationMarker = mMap.addMarker(markerOptions);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
-        if (mGoogleApiClient != null) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient,
-                    this);
-        }*/

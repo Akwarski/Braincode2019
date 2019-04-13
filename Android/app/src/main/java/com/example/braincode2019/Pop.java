@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 
-class Pop extends Activity {
+public class Pop extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

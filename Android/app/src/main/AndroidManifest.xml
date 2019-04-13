@@ -41,10 +41,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!--<activity
+        <activity
             android:name=".Pop"
             android:label="Choose Locaton"
-            android:theme="@style/MyStyle"></activity>-->
+            android:theme="@style/MyStyle"></activity>
     </application>
 
 </manifest>
