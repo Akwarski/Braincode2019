@@ -42,13 +42,14 @@ def find_closest(dlug, szer, current_day, time, distance = 3):
         data = data[1:-1].split('*')
 
         if len(data) > 1:
-            for day in data:
-                day = day.replace('""', '"')
-                x = json.loads(day)
-                if calc_dist_to_km(dlug, szer, paczka.dlugosc, paczka.szerokosc) <= distance:
-                    print(paczka.id)
+            if calc_dist_to_km(dlug, szer, paczka.dlugosc, paczka.szerokosc) <= distance:
+                for day in data:
+                    tempDay = day
+                    day = day.replace('""', '"')
+                    x = json.loads(day)
                     if check_open(x, current_day, time) is True:
                         indexes.append((paczka.id, True))
-                    else:
+                    elif tempDay == data[len(data)-1]:
+                        print(paczka.id)
                         indexes.append((paczka.id, False))
     return indexes
