@@ -33,4 +33,7 @@ def map(request):
                'szerokosc': szerokosc}
     return render(request, 'index.html', context=context)
 
+
+# Create your views here.
+
 # Create your views here.
