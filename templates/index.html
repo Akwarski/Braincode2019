@@ -36,8 +36,9 @@ var cityCircle = new google.maps.Circle({
             center: {lat: {{ dlugosc }}, lng: {{ szerokosc }} },
             radius: {{ odleglosc }} * 1000,
           },);
-infoArray = []
-{% for point in points %}
+infoArray = [];
+markerArray = [];
+    {% for point in points %}
         var infowindow = new google.maps.InfoWindow({
           content: "{{ point.name }}"
         });
@@ -49,17 +50,27 @@ infoArray = []
 
     var name = "{{ point.name }}";
 
-    var marker= new google.maps.Marker({position: new google.maps.LatLng( {{ point.szerokosc }}, {{ point.dlugosc }}), map: map,
+    markerArray.push(marker= new google.maps.Marker({position: new google.maps.LatLng( {{ point.szerokosc }}, {{ point.dlugosc }}), map: map,
     title: name
-    });
+    }));
+
+        {% comment %}
     marker.addListener('click', function() {
         infoArray[0].open(map, marker)
         //infowindow.open(map, marker);
-        });
-
-
+        });{% endcomment %}
 {% endfor %}
+    for (var i = 0; i < markerArray.length; i++) {
+        let number = i
+        markerArray[i].addListener('click', function () {
+            var infoWindow = infoArray[number];
+            infoWindow.open(map, markerArray[number])
 
+
+        });
+    }
+
+        
 }
 </script>
 
