@@ -25,6 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", views.home, name="home"),
     path("GPS_GET", views.GPS_GET, name="GPS_data"),
+    path("map", views.map, name="Map"),
     path("test", views.test_points, name="test")
 
 ]
