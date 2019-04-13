@@ -1,24 +1,24 @@
 from test_model.models import Paczkomat
 
+
 def get_points(punkty):
-    print(punkty)
     data = []
     data_json = []
-    for punkt in punkty:
+    for punkt, if_open in punkty:
         obj = Paczkomat.objects.get(id=punkt)
+        data.append((obj, if_open))
 
-        data.append(obj)
-    for data_point in data:
+    for object in data:
         one_data = {}
-        one_data['type'] = data_point.type
-        one_data['name'] = data_point.name
-        one_data['adress'] = data_point.adress
-        one_data['post_code'] = data_point.post_code
-        one_data['city'] = data_point.city
-        one_data['dlugosc'] = data_point.dlugosc
-        one_data['szerokosc'] = data_point.szerokosc
+        one_data['type'] = object[0].type
+        one_data['name'] = object[0].name
+        one_data['adress'] = object[0].adress
+        one_data['post_code'] = object[0].post_code
+        one_data['city'] = object[0].city
+        one_data['dlugosc'] = object[0].dlugosc
+        one_data['szerokosc'] = object[0].szerokosc
+        one_data['otwarte'] = object[1]
         #one_data['dates'] = object.dates
-        print(one_data)
         data_json.append(one_data)
 
     return data_json

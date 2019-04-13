@@ -8,6 +8,7 @@ from .distance import find_closest
 def home(request):
     return HttpResponse("Hello" + request)
 
+
 def GPS_GET(request):
     dlugosc = request.GET.get('dlugosc')
     szerokosc = request.GET.get("szerokosc")
@@ -22,11 +23,13 @@ def GPS_GET(request):
 
     return HttpResponse(json.dumps(get_points(closest)), content_type="application/json")
 
+
 def test_points(request):
     points = []
     points.append(request.GET.get('1'))
     points.append(request.GET.get('2'))
     return HttpResponse(json.dumps(get_points(points)), content_type="application/json")
+
 
 def map(request):
     dlugosc = request.GET.get('dlugosc')
