@@ -14,18 +14,24 @@
 <script>
 function myMap() {
 var mapProp= {
-  center:new google.maps.LatLng({{ szerokosc }},{{ dlugosc }}),
+  center:new google.maps.LatLng({{ dlugosc }},{{ szerokosc}}),
   zoom:15,
 };
 var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
-var marker = new google.maps.Marker({position: new google.maps.LatLng({{ szerokosc }},{{ dlugosc }}), map: map});
+var marker = new google.maps.Marker({position: new google.maps.LatLng({{ dlugosc}},{{ szerokosc}}), map: map, label: {
+    color: 'gray',
+    fontWeight: 'bold',
+    text: 'Tu jesteś!',
+
+  },});
+
+{% for point in points %}
+    var marker= new google.maps.Marker({position: new google.maps.LatLng( {{ point.szerokosc }}, {{ point.dlugosc }}), map: map});
+{% endfor %}
 
 }
 </script>
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCFmXZUBd7-Ty65hc5z9H7vLYMjkAOI8VE&callback=myMap"></script>
-{% for point in points %}
-{{ point.name }}
-{% endfor %}
 </body>
 </html>

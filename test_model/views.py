@@ -29,15 +29,16 @@ def test_points(request):
     return HttpResponse(json.dumps(get_points(points)), content_type="application/json")
 
 def map(request):
-    dlugosc = request.GET.get('szerokosc')
-    szerokosc = request.GET.get('dlugosc') #dont mind me
+    dlugosc = request.GET.get('dlugosc')
+    szerokosc = request.GET.get('szerokosc') #dont mind me
     odlegosc = request.GET.get('odleglosc')
+    dzien = request.GET.get("dzien")
+    godzina = request.GET.get('godzina')
 
     if type(odlegosc) is str:
-        closest = find_closest((float)(dlugosc),(float)(szerokosc), (int)(odlegosc))
+        closest = find_closest((float)(dlugosc), (float)(szerokosc), dzien, godzina, (int)(odlegosc))
     else:
-        closest = find_closest((float)(dlugosc), (float)(szerokosc))
-        print(closest)
+        closest = find_closest((float)(dlugosc), (float)(szerokosc), dzien, godzina)
     points = get_points(closest)
 
     context = {'dlugosc': dlugosc,

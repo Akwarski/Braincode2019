@@ -6,7 +6,7 @@ def get_points(punkty):
     data_json = []
     for punkt in punkty:
         obj = Paczkomat.objects.get(id=punkt)
-        print(obj)
+
         data.append(obj)
     for data_point in data:
         one_data = {}
