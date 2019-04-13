@@ -43,17 +43,30 @@ markerArray = [];
           content: "{{ point.name }}"
         });
     infoArray.push(infowindow);
-
     {% endfor %}
 
     {% for point in points %}
 
     var name = "{{ point.name }}";
-    console.log("{{ point.otwarte }}");
-    if({{ point.otwarte }})
+    var otwarte = "{{ point.otwarte }}";
+
+    if( otwarte.localeCompare("True") ){
+
     markerArray.push(marker= new google.maps.Marker({position: new google.maps.LatLng( {{ point.szerokosc }}, {{ point.dlugosc }}), map: map,
-    title: name
+    title: name,
+        icon: {
+      url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
+    }
     }));
+    }else {
+
+        markerArray.push(marker= new google.maps.Marker({position: new google.maps.LatLng( {{ point.szerokosc }}, {{ point.dlugosc }}), map: map,
+    title: name,
+            icon: {
+      url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+    }
+    }));
+    }
 
         {% comment %}
     marker.addListener('click', function() {
@@ -77,7 +90,8 @@ markerArray = [];
 </script>
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCFmXZUBd7-Ty65hc5z9H7vLYMjkAOI8VE&callback=myMap"></script>
-Time: <input id="time_input" type="text" name="lname"><br>
+Time: <input id="time_input" type="text" name="lname", value="12:00"><br>
+Odległość: <input id="odleglosc_input" type="text" name="lname", value="100"><br>
 Day: <select id="list_box" name="Day">
   <option value="volvo">MONDAY</option>
     <option value="volvo">TUESDAY</option>
@@ -97,9 +111,11 @@ function check() {
     console.log(day);
     e = document.getElementById("time_input");
     time = e.value;
+    e = document.getElementById("odleglosc_input");
+    odleglosc = e.value;
     console.log(time);
 
-  window.open("map?dlugosc="+ lat + "&szerokosc=" + len +"&dzien=" + day + "&godzina=" + time + "&odleglosc=100", "_top")
+  window.open("map?dlugosc="+ lat + "&szerokosc=" + len +"&dzien=" + day + "&godzina=" + time + "&odleglosc=" + odleglosc, "_top")
 }
 </script>
 </body>
