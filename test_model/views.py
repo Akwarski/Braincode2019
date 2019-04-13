@@ -46,6 +46,7 @@ def map(request):
     else:
         closest = find_closest((float)(dlugosc), (float)(szerokosc), dzien, godzina)
     points = get_points(closest)
+    print(points)
 
     context = {'dlugosc': dlugosc,
                'szerokosc': szerokosc,
