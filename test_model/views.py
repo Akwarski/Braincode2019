@@ -12,11 +12,13 @@ def GPS_GET(request):
     dlugosc = request.GET.get('dlugosc')
     szerokosc = request.GET.get("szerokosc")
     odlegosc = request.GET.get('odleglosc')
+    dzien = request.GET.get("dzien")
+    godzina = request.GET.get('godzina')
 
     if type(odlegosc) is str:
-        closest = find_closest((float)(dlugosc),(float)(szerokosc), (int)(odlegosc))
+        closest = find_closest((float)(dlugosc),(float)(szerokosc), dzien, godzina, (int)(odlegosc))
     else:
-        closest = find_closest((float)(dlugosc), (float)(szerokosc))
+        closest = find_closest((float)(dlugosc), (float)(szerokosc), dzien, godzina)
 
     return HttpResponse(json.dumps(get_points(closest)), content_type="application/json")
 
@@ -46,4 +48,3 @@ def map(request):
 
 # Create your views here.
 
-# Create your views here.

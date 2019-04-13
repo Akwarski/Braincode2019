@@ -7,9 +7,9 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface JsonPlaceHolderApi {
-    @GET("test")
-    Call<List<JsonData>> getPost(@Query("1") int dlugosc,
-                                 @Query("2") int szerokosc);
+    @GET("GPS_GET")
+    Call<List<JsonData>> getPost(@Query("dlugosc") int dlugosc,
+                                 @Query("szerokosc") int szerokosc);
 
     //http://localhost:8000/GPS_GET?dlugosc=100&szerokosc=200
     //http://192.168.43.28:8000/test?1=3&2=5
