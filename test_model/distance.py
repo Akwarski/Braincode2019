@@ -48,7 +48,7 @@ def find_closest(dlug, szer, current_day = "", time = "", distance = 3):
     indexes = []
     paczki = Paczkomat.objects.all()
 
-    if(len(time) == 0):
+    if current_day == "":
         for paczka in paczki:
             if calc_dist_to_km(dlug, szer, paczka.dlugosc, paczka.szerokosc) <= distance:
                 indexes.append((paczka.id, True))
