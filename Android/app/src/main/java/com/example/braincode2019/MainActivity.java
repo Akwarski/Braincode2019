@@ -2,10 +2,13 @@ package com.example.braincode2019;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -19,8 +22,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +50,7 @@ import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -59,6 +65,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener, GoogleMap.OnInfoWindowClickListener {
 
+    private DatePickerDialog.OnDateSetListener dataPickerDialog;
     private FusedLocationProviderClient fusedLocationProviderClient;
     JsonPlaceHolderApi jsonPlaceHolderApi;
     double dlugosc, szerokosc;
@@ -70,6 +77,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private Marker marker;
     ImageView imageView;
+    String dayS;
+    int hourS, minuteS;
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -78,17 +87,53 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        /*tv1 = findViewById(R.id.myLocation);
-        tv2 = findViewById(R.id.deliveryLocation);
-        button1 = findViewById(R.id.button1);
-        button2 = findViewById(R.id.button2);*/
+        //dataPicker
         imageView = findViewById(R.id.iv);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "YOLO", Toast.LENGTH_LONG).show();
+                Calendar cal = Calendar.getInstance();
+                int hour = cal.get(Calendar.HOUR);
+                int minut = cal.get(Calendar.MINUTE);
+                int day = cal.get(Calendar.DAY_OF_WEEK);
+
+                DatePickerDialog dialog = new DatePickerDialog(
+                        MainActivity.this,
+                        android.R.style.Theme_Holo_Light_Dialog_MinWidth, dataPickerDialog, day,hour,minut);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
             }
         });
+        dataPickerDialog = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int day, int hour, int minut) {
+                switch(day){
+                    case 1:
+                        dayS = "SUNDAY";
+                        break;
+                    case 2:
+                        dayS = "MONDAY";
+                        break;
+                    case 3:
+                        dayS = "TUESDAY";
+                        break;
+                    case 4:
+                        dayS = "WEDNESDAY";
+                        break;
+                    case 5:
+                        dayS = "THURSDAY";
+                        break;
+                    case 6:
+                        dayS = "FRIDAY";
+                        break;
+                    case 7:
+                        dayS = "SATURDAY";
+                        break;
+                }
+                hourS = hour;
+                minuteS = minut;
+            }
+        };
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
