@@ -36,26 +36,25 @@ var cityCircle = new google.maps.Circle({
             center: {lat: {{ dlugosc }}, lng: {{ szerokosc }} },
             radius: {{ odleglosc }} * 1000,
           },);
-
-
+infoArray = []
 {% for point in points %}
-
-
+        var infowindow = new google.maps.InfoWindow({
+          content: "{{ point.name }}"
+        });
+    infoArray.push(infowindow);
 
     {% endfor %}
-{% for point in points %}
+
+    {% for point in points %}
 
     var name = "{{ point.name }}";
-
-    var infowindow = new google.maps.InfoWindow({
-          content: name
-        });
 
     var marker= new google.maps.Marker({position: new google.maps.LatLng( {{ point.szerokosc }}, {{ point.dlugosc }}), map: map,
     title: name
     });
     marker.addListener('click', function() {
-          infowindow.open(map, marker);
+        infoArray[0].open(map, marker)
+        //infowindow.open(map, marker);
         });
 
 
