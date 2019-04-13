@@ -8,6 +8,7 @@ public class JsonData {
     private String city;
     private double dlugosc;
     private double szerokosc;
+    private Boolean otwarte;
 
 
     public String getType() {
@@ -36,5 +37,9 @@ public class JsonData {
 
     public double getSzerokosc() {
         return szerokosc;
+    }
+
+    public Boolean getOtwarte() {
+        return otwarte;
     }
 }

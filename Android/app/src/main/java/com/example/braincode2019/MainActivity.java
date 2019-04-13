@@ -54,10 +54,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener,
+        GoogleMap.OnMarkerClickListener {
 
-    //TextView tv1, tv2;
-    //Button button1, button2;
     private FusedLocationProviderClient fusedLocationProviderClient;
     JsonPlaceHolderApi jsonPlaceHolderApi;
     double dlugosc, szerokosc;
@@ -67,6 +66,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     GoogleApiClient mGoogleApiClient;
     LocationRequest mLocationRequest;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    private Marker marker;
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -84,11 +84,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             checkLocationPermission();
         }
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-
         //Location
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         getLocation();
@@ -99,6 +94,13 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });*/
 
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+
+
+
         //http://localhost:8000/GPS_GET?dlugosc=100&szerokosc=200
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(API_BASE_URL)
@@ -107,7 +109,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
         //JsonData
         jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
-        getData();
 
 
         //przejscie do pop up
@@ -120,37 +121,27 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 startActivity(intent);
             }
         });*/
-
     }
 
+    String TEMP = ":";
     public void getData(){
-        Call<List<JsonData>> call = jsonPlaceHolderApi.getPost(20,50, "MONDAY", "13:13");
+        Call<List<JsonData>> call = jsonPlaceHolderApi.getPost(szerokosc, dlugosc);
 
         call.enqueue(new Callback<List<JsonData>>() {
             @Override
             public void onResponse(Call<List<JsonData>> call, Response<List<JsonData>> response) {
                 if (!response.isSuccessful()) {
-                    //tv2.setText(response.code());
-                    //Toast.makeText(getApplicationContext(), response.code(),Toast.LENGTH_LONG).show();
                     return;
                 }
 
                 items = response.body();
 
+                //set points on map
                 for (JsonData item : items) {
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(item.getSzerokosc(),item.getDlugosc())).title(item.getName()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.baseline_place_black_18dp)));
-                    /*StringBuilder sb = new StringBuilder();
-                    sb.append("type: " + item.getType() + "\n");
-                    sb.append("name: " + item.getName() + "\n");
-                    sb.append("adress: " + item.getAdress() + "\n");
-                    sb.append("post code: " + item.getPost_code() + "\n");
-                    sb.append("city: " + item.getCity() + "\n");
-                    sb.append("dlugosc: " + item.getDlugosc() + "\n");
-                    sb.append("szerokosc: " + item.getSzerokosc() + "\n \n");*/
-                    //sb.append("dates: " + item.getDates() + "\n");
-
-                    //tv2.append(sb);
+                    marker = mMap.addMarker(new MarkerOptions().position(new LatLng(item.getSzerokosc(), item.getDlugosc())).title(item.getName()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.baseline_place_black_18dp)));
                 }
+
+                //mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
             }
 
             @Override
@@ -169,11 +160,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             public void onComplete(@NonNull Task<Location> task) {
                 if(task.isSuccessful()){
                     Location location = task.getResult();
-                    //tv1.setText("\n" + location.getLatitude() + " " + location.getLongitude());
                     dlugosc = location.getLatitude();
                     szerokosc = location.getLongitude();
-                    //Toast.makeText(getApplicationContext(), ""+dlugosc, Toast.LENGTH_LONG).show();
 
+                    getData();
                 }
             }
         });
@@ -238,10 +228,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                     == PackageManager.PERMISSION_GRANTED) {
                 buildGoogleApiClient();
 
-                //set points on map
-                //points();
                 mMap.setMyLocationEnabled(true);
-
             }
         } else {
             buildGoogleApiClient();
@@ -265,20 +252,40 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (ContextCompat.checkSelfPermission(this,
-                            Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED) {
+                            Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         if (mGoogleApiClient == null) {
                             buildGoogleApiClient();
                         }
                         mMap.setMyLocationEnabled(true);
                     }
                 } else {
-                    Toast.makeText(this, "permission denied",
-                            Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
                 }
                 return;
             }
         }
+    }
+
+    @Override
+    public boolean onMarkerClick(final Marker mark) {
+        Toast.makeText(getApplicationContext(), "YOLO", Toast.LENGTH_LONG).show();
+
+        if (mark.equals(marker))
+        {
+            Toast.makeText(getApplicationContext(), "hasgdhas", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(MainActivity.this,Pop.class);
+            //intent.putStringArrayListExtra("JsonData", items)
+            //intent.putExtra("JsonData", items);
+            startActivity(intent);
+        }
+        return true;
+
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+        Toast.makeText(getApplicationContext(), "YOLO", Toast.LENGTH_LONG).show();
+
     }
 }
 
