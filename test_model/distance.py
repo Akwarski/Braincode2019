@@ -31,35 +31,32 @@ def check_open(data, current_day, time):
     return False
 
 
-def find_closest(dlug, szer, current_day, time, distance = 3):
+def find_closest(dlug, szer, current_day = "", time = "", distance = 3):
     indexes = []
     paczki = Paczkomat.objects.all()
 
-    for paczka in paczki:
-
-        data = paczka.dates
-        data = data.replace('},{', '}*{')
-        data = data[1:-1].split('*')
-
-        if len(data) > 1:
+    if(len(time) == 0):
+        for paczka in paczki:
             if calc_dist_to_km(dlug, szer, paczka.dlugosc, paczka.szerokosc) <= distance:
-                for day in data:
-                    tempDay = day
-                    day = day.replace('""', '"')
-                    x = json.loads(day)
-                    if check_open(x, current_day, time) is True:
-                        indexes.append((paczka.id, True))
-                    elif tempDay == data[len(data)-1]:
-                        print(paczka.id)
-                        indexes.append((paczka.id, False))
-    return indexes
-
-
-def find_closest(dlug, szer, distance = 3):
-    indexes = []
-    paczki = Paczkomat.objects.all()
-
-    for paczka in paczki:
-        if calc_dist_to_km(dlug, szer, paczka.dlugosc, paczka.szerokosc) <= distance:
                 indexes.append((paczka.id, True))
-    return indexes
+        return indexes
+    else:
+        for paczka in paczki:
+
+            data = paczka.dates
+            data = data.replace('},{', '}*{')
+            data = data[1:-1].split('*')
+
+            if len(data) > 1:
+                if calc_dist_to_km(dlug, szer, paczka.dlugosc, paczka.szerokosc) <= distance:
+                    print(calc_dist_to_km(dlug, szer, paczka.dlugosc, paczka.szerokosc))
+                    for day in data:
+                        tempDay = day
+                        day = day.replace('""', '"')
+                        x = json.loads(day)
+                        if check_open(x, current_day, time) is True:
+                            indexes.append((paczka.id, True))
+                        elif tempDay == data[len(data)-1]:
+                            print(paczka.id)
+                            indexes.append((paczka.id, False))
+        return indexes
