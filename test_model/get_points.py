@@ -19,6 +19,7 @@ def get_points(punkty):
         one_data['szerokosc'] = object.szerokosc
         #one_data['dates'] = object.dates
         data_json.append(one_data)
+        #print(data_json.last())
 
     return data_json
 
